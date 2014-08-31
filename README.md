@@ -12,7 +12,7 @@ MCProtocolLib is a simple library for communicating with a Minecraft client/serv
 <b>Example Code</b>
 --------
 
-See example/org/spacehq/mc/protocol/test/Test.java
+See example/org/spacehq/mc/protocol/test/Test.java for an example of how to create a simple chat ping bot.
 
 
 <b>Building the Source</b>
