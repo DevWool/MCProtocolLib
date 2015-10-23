@@ -41,17 +41,17 @@ public class NetUtil {
         }
     }
 
-    public static Position readPosition(NetInput in) throws IOException {
+    public static NetPosition readPosition(NetInput in) throws IOException {
         long val = in.readLong();
 
         int x = (int) (val >> POSITION_X_SIZE);
         int y = (int) ((val >> POSITION_Y_SIZE) & POSITION_Y_SHIFT);
         int z = (int) ((val << POSITION_Z_SIZE) >> POSITION_Z_SIZE);
 
-        return new Position(x, y, z);
+        return new NetPosition(x, y, z);
     }
 
-    public static void writePosition(NetOutput out, Position pos) throws IOException {
+    public static void writePosition(NetOutput out, NetPosition pos) throws IOException {
         long x = pos.getX() & POSITION_WRITE_SHIFT;
         long y = pos.getY() & POSITION_Y_SHIFT;
         long z = pos.getZ() & POSITION_WRITE_SHIFT;
@@ -59,16 +59,16 @@ public class NetUtil {
         out.writeLong(x << POSITION_X_SIZE | y << POSITION_Y_SIZE | z);
     }
 
-    public static ItemStack readItem(NetInput in) throws IOException {
+    public static NetItemStack readItem(NetInput in) throws IOException {
         short item = in.readShort();
         if(item < 0) {
             return null;
         } else {
-            return new ItemStack(item, in.readByte(), in.readShort(), readNBT(in));
+            return new NetItemStack(item, in.readByte(), in.readShort(), readNBT(in));
         }
     }
 
-    public static void writeItem(NetOutput out, ItemStack item) throws IOException {
+    public static void writeItem(NetOutput out, NetItemStack item) throws IOException {
         if(item == null) {
             out.writeShort(-1);
         } else {
@@ -107,10 +107,10 @@ public class NetUtil {
                     value = readItem(in);
                     break;
                 case POSITION:
-                    value = new Position(in.readInt(), in.readInt(), in.readInt());
+                    value = new NetPosition(in.readInt(), in.readInt(), in.readInt());
                     break;
                 case ROTATION:
-                    value = new Rotation(in.readFloat(), in.readFloat(), in.readFloat());
+                    value = new NetRotation(in.readFloat(), in.readFloat(), in.readFloat());
                     break;
                 default:
                     throw new IOException("Unknown metadata type id: " + typeId);
@@ -143,16 +143,16 @@ public class NetUtil {
                     out.writeString((String) meta.getValue());
                     break;
                 case ITEM:
-                    writeItem(out, (ItemStack) meta.getValue());
+                    writeItem(out, (NetItemStack) meta.getValue());
                     break;
                 case POSITION:
-                    Position pos = (Position) meta.getValue();
+                    NetPosition pos = (NetPosition) meta.getValue();
                     out.writeInt(pos.getX());
                     out.writeInt(pos.getY());
                     out.writeInt(pos.getZ());
                     break;
                 case ROTATION:
-                    Rotation rot = (Rotation) meta.getValue();
+                    NetRotation rot = (NetRotation) meta.getValue();
                     out.writeFloat(rot.getPitch());
                     out.writeFloat(rot.getYaw());
                     out.writeFloat(rot.getRoll());
@@ -166,7 +166,7 @@ public class NetUtil {
     }
 
     public static ParsedChunkData dataToChunks(NetworkChunkData data, boolean checkForSky) {
-        Chunk chunks[] = new Chunk[16];
+        NetChunk chunks[] = new NetChunk[16];
         int pos = 0;
         int expected = 0;
         boolean sky = false;
@@ -184,7 +184,7 @@ public class NetUtil {
                     }
 
                     if(pass == 1) {
-                        chunks[ind] = new Chunk(sky || data.hasSkyLight());
+                        chunks[ind] = new NetChunk(sky || data.hasSkyLight());
                         ShortArray3d blocks = chunks[ind].getBlocks();
                         buf.position(pos / 2);
                         buf.get(blocks.getData(), 0, blocks.getData().length);
@@ -237,32 +237,32 @@ public class NetUtil {
         // 3 = Add sky light.
         for(int pass = 0; pass < 4; pass++) {
             for(int ind = 0; ind < chunks.getChunks().length; ++ind) {
-                Chunk chunk = chunks.getChunks()[ind];
-                if(chunk != null && (!fullChunk || !chunk.isEmpty())) {
+                NetChunk netChunk = chunks.getChunks()[ind];
+                if(netChunk != null && (!fullChunk || !netChunk.isEmpty())) {
                     if(pass == 0) {
                         chunkMask |= 1 << ind;
-                        length += chunk.getBlocks().getData().length * 2;
-                        length += chunk.getBlockLight().getData().length;
-                        if(chunk.getSkyLight() != null) {
-                            length += chunk.getSkyLight().getData().length;
+                        length += netChunk.getBlocks().getData().length * 2;
+                        length += netChunk.getBlockLight().getData().length;
+                        if(netChunk.getSkyLight() != null) {
+                            length += netChunk.getSkyLight().getData().length;
                         }
                     }
 
                     if(pass == 1) {
-                        short blocks[] = chunk.getBlocks().getData();
+                        short blocks[] = netChunk.getBlocks().getData();
                         buf.position(pos / 2);
                         buf.put(blocks, 0, blocks.length);
                         pos += blocks.length * 2;
                     }
 
                     if(pass == 2) {
-                        byte blocklight[] = chunk.getBlockLight().getData();
+                        byte blocklight[] = netChunk.getBlockLight().getData();
                         System.arraycopy(blocklight, 0, data, pos, blocklight.length);
                         pos += blocklight.length;
                     }
 
-                    if(pass == 3 && chunk.getSkyLight() != null) {
-                        byte skylight[] = chunk.getSkyLight().getData();
+                    if(pass == 3 && netChunk.getSkyLight() != null) {
+                        byte skylight[] = netChunk.getSkyLight().getData();
                         System.arraycopy(skylight, 0, data, pos, skylight.length);
                         pos += skylight.length;
                         sky = true;

@@ -1,16 +1,16 @@
 package org.spacehq.mc.protocol.data.game;
 
-public class Chunk {
+public class NetChunk {
 
     private ShortArray3d blocks;
     private NibbleArray3d blocklight;
     private NibbleArray3d skylight;
 
-    public Chunk(boolean skylight) {
+    public NetChunk(boolean skylight) {
         this(new ShortArray3d(4096), new NibbleArray3d(4096), skylight ? new NibbleArray3d(4096) : null);
     }
 
-    public Chunk(ShortArray3d blocks, NibbleArray3d blocklight, NibbleArray3d skylight) {
+    public NetChunk(ShortArray3d blocks, NibbleArray3d blocklight, NibbleArray3d skylight) {
         this.blocks = blocks;
         this.blocklight = blocklight;
         this.skylight = skylight;
@@ -43,11 +43,11 @@ public class Chunk {
         if(this == o) return true;
         if(o == null || getClass() != o.getClass()) return false;
 
-        Chunk chunk = (Chunk) o;
+        NetChunk netChunk = (NetChunk) o;
 
-        if(!blocklight.equals(chunk.blocklight)) return false;
-        if(!blocks.equals(chunk.blocks)) return false;
-        if(skylight != null ? !skylight.equals(chunk.skylight) : chunk.skylight != null) return false;
+        if(!blocklight.equals(netChunk.blocklight)) return false;
+        if(!blocks.equals(netChunk.blocks)) return false;
+        if(skylight != null ? !skylight.equals(netChunk.skylight) : netChunk.skylight != null) return false;
 
         return true;
     }

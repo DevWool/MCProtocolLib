@@ -1,7 +1,7 @@
 package org.spacehq.mc.protocol.util;
 
 import org.junit.Test;
-import org.spacehq.mc.protocol.data.game.Position;
+import org.spacehq.mc.protocol.data.game.NetPosition;
 
 import java.io.IOException;
 
@@ -13,7 +13,7 @@ public class NetUtilTest {
 
     @Test
     public void testPosition() throws IOException {
-        writePosition(out, new Position(1, 61, -1));
+        writePosition(out, new NetPosition(1, 61, -1));
         assertPosition(readPosition(in), 1, 61, -1);
     }
 

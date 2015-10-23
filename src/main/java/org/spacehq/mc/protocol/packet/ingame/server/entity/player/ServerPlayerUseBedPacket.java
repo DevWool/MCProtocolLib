@@ -1,6 +1,6 @@
 package org.spacehq.mc.protocol.packet.ingame.server.entity.player;
 
-import org.spacehq.mc.protocol.data.game.Position;
+import org.spacehq.mc.protocol.data.game.NetPosition;
 import org.spacehq.mc.protocol.util.NetUtil;
 import org.spacehq.packetlib.io.NetInput;
 import org.spacehq.packetlib.io.NetOutput;
@@ -11,35 +11,35 @@ import java.io.IOException;
 public class ServerPlayerUseBedPacket implements Packet {
 
     private int entityId;
-    private Position position;
+    private NetPosition netPosition;
 
     @SuppressWarnings("unused")
     private ServerPlayerUseBedPacket() {
     }
 
-    public ServerPlayerUseBedPacket(int entityId, Position position) {
+    public ServerPlayerUseBedPacket(int entityId, NetPosition netPosition) {
         this.entityId = entityId;
-        this.position = position;
+        this.netPosition = netPosition;
     }
 
     public int getEntityId() {
         return this.entityId;
     }
 
-    public Position getPosition() {
-        return this.position;
+    public NetPosition getPosition() {
+        return this.netPosition;
     }
 
     @Override
     public void read(NetInput in) throws IOException {
         this.entityId = in.readVarInt();
-        this.position = NetUtil.readPosition(in);
+        this.netPosition = NetUtil.readPosition(in);
     }
 
     @Override
     public void write(NetOutput out) throws IOException {
         out.writeVarInt(this.entityId);
-        NetUtil.writePosition(out, this.position);
+        NetUtil.writePosition(out, this.netPosition);
     }
 
     @Override

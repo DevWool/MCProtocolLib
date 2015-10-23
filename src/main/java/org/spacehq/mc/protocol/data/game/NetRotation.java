@@ -1,15 +1,15 @@
 package org.spacehq.mc.protocol.data.game;
 
-public class Rotation {
+public class NetRotation {
     private float pitch;
     private float yaw;
     private float roll;
 
-    public Rotation() {
+    public NetRotation() {
         this(0, 0, 0);
     }
 
-    public Rotation(float pitch, float yaw, float roll) {
+    public NetRotation(float pitch, float yaw, float roll) {
         this.pitch = pitch;
         this.yaw = yaw;
         this.roll = roll;
@@ -32,11 +32,11 @@ public class Rotation {
         if(this == o) return true;
         if(o == null || getClass() != o.getClass()) return false;
 
-        Rotation rotation = (Rotation) o;
+        NetRotation netRotation = (NetRotation) o;
 
-        if(Float.compare(rotation.pitch, pitch) != 0) return false;
-        if(Float.compare(rotation.roll, roll) != 0) return false;
-        if(Float.compare(rotation.yaw, yaw) != 0) return false;
+        if(Float.compare(netRotation.pitch, pitch) != 0) return false;
+        if(Float.compare(netRotation.roll, roll) != 0) return false;
+        if(Float.compare(netRotation.yaw, yaw) != 0) return false;
 
         return true;
     }

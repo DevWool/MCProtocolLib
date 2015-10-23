@@ -1,6 +1,6 @@
 package org.spacehq.mc.protocol.packet.ingame.client.window;
 
-import org.spacehq.mc.protocol.data.game.ItemStack;
+import org.spacehq.mc.protocol.data.game.NetItemStack;
 import org.spacehq.mc.protocol.util.NetUtil;
 import org.spacehq.packetlib.io.NetInput;
 import org.spacehq.packetlib.io.NetOutput;
@@ -11,13 +11,13 @@ import java.io.IOException;
 public class ClientCreativeInventoryActionPacket implements Packet {
 
     private int slot;
-    private ItemStack clicked;
+    private NetItemStack clicked;
 
     @SuppressWarnings("unused")
     private ClientCreativeInventoryActionPacket() {
     }
 
-    public ClientCreativeInventoryActionPacket(int slot, ItemStack clicked) {
+    public ClientCreativeInventoryActionPacket(int slot, NetItemStack clicked) {
         this.slot = slot;
         this.clicked = clicked;
     }
@@ -26,7 +26,7 @@ public class ClientCreativeInventoryActionPacket implements Packet {
         return this.slot;
     }
 
-    public ItemStack getClickedItem() {
+    public NetItemStack getClickedItem() {
         return this.clicked;
     }
 

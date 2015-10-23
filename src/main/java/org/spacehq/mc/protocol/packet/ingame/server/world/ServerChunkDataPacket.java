@@ -1,6 +1,6 @@
 package org.spacehq.mc.protocol.packet.ingame.server.world;
 
-import org.spacehq.mc.protocol.data.game.Chunk;
+import org.spacehq.mc.protocol.data.game.NetChunk;
 import org.spacehq.mc.protocol.util.NetUtil;
 import org.spacehq.mc.protocol.util.NetworkChunkData;
 import org.spacehq.mc.protocol.util.ParsedChunkData;
@@ -14,7 +14,7 @@ public class ServerChunkDataPacket implements Packet {
 
     private int x;
     private int z;
-    private Chunk chunks[];
+    private NetChunk netChunks[];
     private byte biomeData[];
 
     @SuppressWarnings("unused")
@@ -22,37 +22,37 @@ public class ServerChunkDataPacket implements Packet {
     }
 
     /**
-     * Convenience constructor for creating a packet to unload chunks.
+     * Convenience constructor for creating a packet to unload netChunks.
      *
      * @param x X of the chunk column.
      * @param z Z of the chunk column.
      */
     public ServerChunkDataPacket(int x, int z) {
-        this(x, z, new Chunk[16], new byte[256]);
+        this(x, z, new NetChunk[16], new byte[256]);
     }
 
     /**
-     * Constructs a ServerChunkDataPacket for updating chunks.
+     * Constructs a ServerChunkDataPacket for updating netChunks.
      *
      * @param x      X of the chunk column.
      * @param z      Z of the chunk column.
-     * @param chunks Array of chunks in the column. Length must be 16 but can contain null values.
-     * @throws IllegalArgumentException If the chunk array length is not 16 or skylight arrays exist in some but not all chunks.
+     * @param netChunks Array of netChunks in the column. Length must be 16 but can contain null values.
+     * @throws IllegalArgumentException If the chunk array length is not 16 or skylight arrays exist in some but not all netChunks.
      */
-    public ServerChunkDataPacket(int x, int z, Chunk chunks[]) {
+    public ServerChunkDataPacket(int x, int z, NetChunk chunks[]) {
         this(x, z, chunks, null);
     }
 
     /**
-     * Constructs a ServerChunkDataPacket for updating a full column of chunks.
+     * Constructs a ServerChunkDataPacket for updating a full column of netChunks.
      *
      * @param x         X of the chunk column.
      * @param z         Z of the chunk column.
-     * @param chunks    Array of chunks in the column. Length must be 16 but can contain null values.
+     * @param netChunks    Array of netChunks in the column. Length must be 16 but can contain null values.
      * @param biomeData Array of biome data for the column.
-     * @throws IllegalArgumentException If the chunk array length is not 16 or skylight arrays exist in some but not all chunks.
+     * @throws IllegalArgumentException If the chunk array length is not 16 or skylight arrays exist in some but not all netChunks.
      */
-    public ServerChunkDataPacket(int x, int z, Chunk chunks[], byte biomeData[]) {
+    public ServerChunkDataPacket(int x, int z, NetChunk chunks[], byte biomeData[]) {
         if(chunks.length != 16) {
             throw new IllegalArgumentException("Chunks length must be 16.");
         }
@@ -70,12 +70,12 @@ public class ServerChunkDataPacket implements Packet {
         }
 
         if(noSkylight && skylight) {
-            throw new IllegalArgumentException("Either all chunks must have skylight values or none must have them.");
+            throw new IllegalArgumentException("Either all netChunks must have skylight values or none must have them.");
         }
 
         this.x = x;
         this.z = z;
-        this.chunks = chunks;
+        this.netChunks = chunks;
         this.biomeData = biomeData;
     }
 
@@ -87,8 +87,8 @@ public class ServerChunkDataPacket implements Packet {
         return this.z;
     }
 
-    public Chunk[] getChunks() {
-        return this.chunks;
+    public NetChunk[] getChunks() {
+        return this.netChunks;
     }
 
     public byte[] getBiomeData() {
@@ -107,13 +107,13 @@ public class ServerChunkDataPacket implements Packet {
         int chunkMask = in.readUnsignedShort();
         byte data[] = in.readBytes(in.readVarInt());
         ParsedChunkData chunkData = NetUtil.dataToChunks(new NetworkChunkData(chunkMask, fullChunk, false, data), true);
-        this.chunks = chunkData.getChunks();
+        this.netChunks = chunkData.getChunks();
         this.biomeData = chunkData.getBiomes();
     }
 
     @Override
     public void write(NetOutput out) throws IOException {
-        NetworkChunkData data = NetUtil.chunksToData(new ParsedChunkData(this.chunks, this.biomeData));
+        NetworkChunkData data = NetUtil.chunksToData(new ParsedChunkData(this.netChunks, this.biomeData));
         out.writeInt(this.x);
         out.writeInt(this.z);
         out.writeBoolean(data.isFullChunk());

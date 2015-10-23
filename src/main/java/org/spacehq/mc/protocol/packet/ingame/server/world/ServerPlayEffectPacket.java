@@ -1,6 +1,6 @@
 package org.spacehq.mc.protocol.packet.ingame.server.world;
 
-import org.spacehq.mc.protocol.data.game.Position;
+import org.spacehq.mc.protocol.data.game.NetPosition;
 import org.spacehq.mc.protocol.data.game.values.MagicValues;
 import org.spacehq.mc.protocol.data.game.values.world.effect.BreakBlockEffectData;
 import org.spacehq.mc.protocol.data.game.values.world.effect.BreakPotionEffectData;
@@ -21,7 +21,7 @@ import java.io.IOException;
 public class ServerPlayEffectPacket implements Packet {
 
     private WorldEffect effect;
-    private Position position;
+    private NetPosition netPosition;
     private WorldEffectData data;
     private boolean broadcast;
 
@@ -29,13 +29,13 @@ public class ServerPlayEffectPacket implements Packet {
     private ServerPlayEffectPacket() {
     }
 
-    public ServerPlayEffectPacket(WorldEffect effect, Position position, WorldEffectData data) {
-        this(effect, position, data, false);
+    public ServerPlayEffectPacket(WorldEffect effect, NetPosition netPosition, WorldEffectData data) {
+        this(effect, netPosition, data, false);
     }
 
-    public ServerPlayEffectPacket(WorldEffect effect, Position position, WorldEffectData data, boolean broadcast) {
+    public ServerPlayEffectPacket(WorldEffect effect, NetPosition netPosition, WorldEffectData data, boolean broadcast) {
         this.effect = effect;
-        this.position = position;
+        this.netPosition = netPosition;
         this.data = data;
         this.broadcast = broadcast;
     }
@@ -44,8 +44,8 @@ public class ServerPlayEffectPacket implements Packet {
         return this.effect;
     }
 
-    public Position getPosition() {
-        return this.position;
+    public NetPosition getPosition() {
+        return this.netPosition;
     }
 
     public WorldEffectData getData() {
@@ -65,7 +65,7 @@ public class ServerPlayEffectPacket implements Packet {
             this.effect = MagicValues.key(SoundEffect.class, id);
         }
 
-        this.position = NetUtil.readPosition(in);
+        this.netPosition = NetUtil.readPosition(in);
         int value = in.readInt();
         if(this.effect == SoundEffect.PLAY_RECORD) {
             this.data = new RecordEffectData(value);
@@ -92,7 +92,7 @@ public class ServerPlayEffectPacket implements Packet {
         }
 
         out.writeInt(id);
-        NetUtil.writePosition(out, this.position);
+        NetUtil.writePosition(out, this.netPosition);
         int value = 0;
         if(this.data instanceof RecordEffectData) {
             value = ((RecordEffectData) this.data).getRecordId();

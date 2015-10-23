@@ -1,21 +1,21 @@
 package org.spacehq.mc.protocol.data.game.values.world.block;
 
-import org.spacehq.mc.protocol.data.game.Position;
+import org.spacehq.mc.protocol.data.game.NetPosition;
 
 public class BlockChangeRecord {
 
-    private Position position;
+    private NetPosition netPosition;
     private int id;
     private int data;
 
-    public BlockChangeRecord(Position position, int id, int data) {
-        this.position = position;
+    public BlockChangeRecord(NetPosition netPosition, int id, int data) {
+        this.netPosition = netPosition;
         this.id = id;
         this.data = data;
     }
 
-    public Position getPosition() {
-        return this.position;
+    public NetPosition getPosition() {
+        return this.netPosition;
     }
 
     public int getId() {
@@ -35,14 +35,14 @@ public class BlockChangeRecord {
 
         if(id != record.id) return false;
         if(data != record.data) return false;
-        if(!position.equals(record.position)) return false;
+        if(!netPosition.equals(record.netPosition)) return false;
 
         return true;
     }
 
     @Override
     public int hashCode() {
-        int result = position.hashCode();
+        int result = netPosition.hashCode();
         result = 31 * result + id;
         result = 31 * result + data;
         return result;

@@ -1,7 +1,7 @@
 package org.spacehq.mc.protocol.packet.ingame.client.player;
 
-import org.spacehq.mc.protocol.data.game.ItemStack;
-import org.spacehq.mc.protocol.data.game.Position;
+import org.spacehq.mc.protocol.data.game.NetItemStack;
+import org.spacehq.mc.protocol.data.game.NetPosition;
 import org.spacehq.mc.protocol.data.game.values.Face;
 import org.spacehq.mc.protocol.data.game.values.MagicValues;
 import org.spacehq.mc.protocol.util.NetUtil;
@@ -13,9 +13,9 @@ import java.io.IOException;
 
 public class ClientPlayerPlaceBlockPacket implements Packet {
 
-    private Position position;
+    private NetPosition netPosition;
     private Face face;
-    private ItemStack held;
+    private NetItemStack held;
     private float cursorX;
     private float cursorY;
     private float cursorZ;
@@ -24,8 +24,8 @@ public class ClientPlayerPlaceBlockPacket implements Packet {
     private ClientPlayerPlaceBlockPacket() {
     }
 
-    public ClientPlayerPlaceBlockPacket(Position position, Face face, ItemStack held, float cursorX, float cursorY, float cursorZ) {
-        this.position = position;
+    public ClientPlayerPlaceBlockPacket(NetPosition netPosition, Face face, NetItemStack held, float cursorX, float cursorY, float cursorZ) {
+        this.netPosition = netPosition;
         this.face = face;
         this.held = held;
         this.cursorX = cursorX;
@@ -33,15 +33,15 @@ public class ClientPlayerPlaceBlockPacket implements Packet {
         this.cursorZ = cursorZ;
     }
 
-    public Position getPosition() {
-        return this.position;
+    public NetPosition getPosition() {
+        return this.netPosition;
     }
 
     public Face getFace() {
         return this.face;
     }
 
-    public ItemStack getHeldItem() {
+    public NetItemStack getHeldItem() {
         return this.held;
     }
 
@@ -59,7 +59,7 @@ public class ClientPlayerPlaceBlockPacket implements Packet {
 
     @Override
     public void read(NetInput in) throws IOException {
-        this.position = NetUtil.readPosition(in);
+        this.netPosition = NetUtil.readPosition(in);
         this.face = MagicValues.key(Face.class, in.readUnsignedByte());
         this.held = NetUtil.readItem(in);
         this.cursorX = in.readByte() / 16f;
@@ -69,7 +69,7 @@ public class ClientPlayerPlaceBlockPacket implements Packet {
 
     @Override
     public void write(NetOutput out) throws IOException {
-        NetUtil.writePosition(out, this.position);
+        NetUtil.writePosition(out, this.netPosition);
         out.writeByte(MagicValues.value(Integer.class, this.face));
         NetUtil.writeItem(out, this.held);
         out.writeByte((int) (this.cursorX * 16));

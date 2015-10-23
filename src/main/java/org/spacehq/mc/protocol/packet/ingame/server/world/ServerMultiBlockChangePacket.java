@@ -1,6 +1,6 @@
 package org.spacehq.mc.protocol.packet.ingame.server.world;
 
-import org.spacehq.mc.protocol.data.game.Position;
+import org.spacehq.mc.protocol.data.game.NetPosition;
 import org.spacehq.mc.protocol.data.game.values.world.block.BlockChangeRecord;
 import org.spacehq.packetlib.io.NetInput;
 import org.spacehq.packetlib.io.NetOutput;
@@ -39,7 +39,7 @@ public class ServerMultiBlockChangePacket implements Packet {
             int x = (chunkX << 4) + (pos >> 12 & 15);
             int y = pos & 255;
             int z = (chunkZ << 4) + (pos >> 8 & 15);
-            this.records[index] = new BlockChangeRecord(new Position(x, y, z), block >> 4, block & 0xF);
+            this.records[index] = new BlockChangeRecord(new NetPosition(x, y, z), block >> 4, block & 0xF);
         }
     }
 

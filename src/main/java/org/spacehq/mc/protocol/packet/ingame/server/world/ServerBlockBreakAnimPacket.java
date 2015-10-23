@@ -1,6 +1,6 @@
 package org.spacehq.mc.protocol.packet.ingame.server.world;
 
-import org.spacehq.mc.protocol.data.game.Position;
+import org.spacehq.mc.protocol.data.game.NetPosition;
 import org.spacehq.mc.protocol.data.game.values.MagicValues;
 import org.spacehq.mc.protocol.data.game.values.entity.player.BlockBreakStage;
 import org.spacehq.mc.protocol.util.NetUtil;
@@ -13,16 +13,16 @@ import java.io.IOException;
 public class ServerBlockBreakAnimPacket implements Packet {
 
     private int breakerEntityId;
-    private Position position;
+    private NetPosition netPosition;
     private BlockBreakStage stage;
 
     @SuppressWarnings("unused")
     private ServerBlockBreakAnimPacket() {
     }
 
-    public ServerBlockBreakAnimPacket(int breakerEntityId, Position position, BlockBreakStage stage) {
+    public ServerBlockBreakAnimPacket(int breakerEntityId, NetPosition netPosition, BlockBreakStage stage) {
         this.breakerEntityId = breakerEntityId;
-        this.position = position;
+        this.netPosition = netPosition;
         this.stage = stage;
     }
 
@@ -30,8 +30,8 @@ public class ServerBlockBreakAnimPacket implements Packet {
         return this.breakerEntityId;
     }
 
-    public Position getPosition() {
-        return this.position;
+    public NetPosition getPosition() {
+        return this.netPosition;
     }
 
     public BlockBreakStage getStage() {
@@ -41,7 +41,7 @@ public class ServerBlockBreakAnimPacket implements Packet {
     @Override
     public void read(NetInput in) throws IOException {
         this.breakerEntityId = in.readVarInt();
-        this.position = NetUtil.readPosition(in);
+        this.netPosition = NetUtil.readPosition(in);
         this.stage = MagicValues.key(BlockBreakStage.class, in.readUnsignedByte());
         if(this.stage == null) {
             this.stage = BlockBreakStage.RESET;
@@ -51,7 +51,7 @@ public class ServerBlockBreakAnimPacket implements Packet {
     @Override
     public void write(NetOutput out) throws IOException {
         out.writeVarInt(this.breakerEntityId);
-        NetUtil.writePosition(out, this.position);
+        NetUtil.writePosition(out, this.netPosition);
         out.writeByte(MagicValues.value(Integer.class, this.stage));
     }
 

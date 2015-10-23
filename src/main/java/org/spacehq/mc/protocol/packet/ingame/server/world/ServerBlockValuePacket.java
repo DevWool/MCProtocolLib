@@ -1,6 +1,6 @@
 package org.spacehq.mc.protocol.packet.ingame.server.world;
 
-import org.spacehq.mc.protocol.data.game.Position;
+import org.spacehq.mc.protocol.data.game.NetPosition;
 import org.spacehq.mc.protocol.data.game.values.MagicValues;
 import org.spacehq.mc.protocol.data.game.values.world.block.value.BlockValue;
 import org.spacehq.mc.protocol.data.game.values.world.block.value.BlockValueType;
@@ -31,7 +31,7 @@ public class ServerBlockValuePacket implements Packet {
     private static final int ENDER_CHEST = 130;
     private static final int TRAPPED_CHEST = 146;
 
-    private Position position;
+    private NetPosition netPosition;
     private BlockValueType type;
     private BlockValue value;
     private int blockId;
@@ -40,15 +40,15 @@ public class ServerBlockValuePacket implements Packet {
     private ServerBlockValuePacket() {
     }
 
-    public ServerBlockValuePacket(Position position, BlockValueType type, BlockValue value, int blockId) {
-        this.position = position;
+    public ServerBlockValuePacket(NetPosition netPosition, BlockValueType type, BlockValue value, int blockId) {
+        this.netPosition = netPosition;
         this.type = type;
         this.value = value;
         this.blockId = blockId;
     }
 
-    public Position getPosition() {
-        return this.position;
+    public NetPosition getPosition() {
+        return this.netPosition;
     }
 
     public BlockValueType getType() {
@@ -65,7 +65,7 @@ public class ServerBlockValuePacket implements Packet {
 
     @Override
     public void read(NetInput in) throws IOException {
-        this.position = NetUtil.readPosition(in);
+        this.netPosition = NetUtil.readPosition(in);
         int type = in.readUnsignedByte();
         if(this.blockId == NOTE_BLOCK) {
             this.type = MagicValues.key(NoteBlockValueType.class, type);
@@ -97,7 +97,7 @@ public class ServerBlockValuePacket implements Packet {
 
     @Override
     public void write(NetOutput out) throws IOException {
-        NetUtil.writePosition(out, this.position);
+        NetUtil.writePosition(out, this.netPosition);
         int type = 0;
         if(this.type instanceof NoteBlockValueType) {
             type = MagicValues.value(Integer.class, (NoteBlockValueType) this.type);

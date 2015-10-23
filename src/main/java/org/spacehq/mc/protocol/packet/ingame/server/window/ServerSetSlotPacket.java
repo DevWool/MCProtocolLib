@@ -1,6 +1,6 @@
 package org.spacehq.mc.protocol.packet.ingame.server.window;
 
-import org.spacehq.mc.protocol.data.game.ItemStack;
+import org.spacehq.mc.protocol.data.game.NetItemStack;
 import org.spacehq.mc.protocol.util.NetUtil;
 import org.spacehq.packetlib.io.NetInput;
 import org.spacehq.packetlib.io.NetOutput;
@@ -12,13 +12,13 @@ public class ServerSetSlotPacket implements Packet {
 
     private int windowId;
     private int slot;
-    private ItemStack item;
+    private NetItemStack item;
 
     @SuppressWarnings("unused")
     private ServerSetSlotPacket() {
     }
 
-    public ServerSetSlotPacket(int windowId, int slot, ItemStack item) {
+    public ServerSetSlotPacket(int windowId, int slot, NetItemStack item) {
         this.windowId = windowId;
         this.slot = slot;
         this.item = item;
@@ -32,7 +32,7 @@ public class ServerSetSlotPacket implements Packet {
         return this.slot;
     }
 
-    public ItemStack getItem() {
+    public NetItemStack getItem() {
         return this.item;
     }
 

@@ -2,7 +2,7 @@ package org.spacehq.mc.protocol;
 
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
-import org.spacehq.mc.protocol.data.game.Position;
+import org.spacehq.mc.protocol.data.game.NetPosition;
 import org.spacehq.mc.protocol.data.game.values.world.block.BlockChangeRecord;
 import org.spacehq.packetlib.packet.Packet;
 import org.spacehq.packetlib.tcp.io.ByteBufNetInput;
@@ -42,10 +42,10 @@ public class ByteBufHelper {
         }
     }
 
-    public static void assertPosition(Position position, int x, int y, int z) {
-        assertEquals("Received incorrect X position", x, position.getX());
-        assertEquals("Received incorrect Y position", y, position.getY());
-        assertEquals("Received incorrect Z position", z, position.getZ());
+    public static void assertPosition(NetPosition netPosition, int x, int y, int z) {
+        assertEquals("Received incorrect X position", x, netPosition.getX());
+        assertEquals("Received incorrect Y position", y, netPosition.getY());
+        assertEquals("Received incorrect Z position", z, netPosition.getZ());
     }
 
     public static void assertBlock(BlockChangeRecord record, int block, int data) {

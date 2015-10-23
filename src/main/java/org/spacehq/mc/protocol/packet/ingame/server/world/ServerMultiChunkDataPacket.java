@@ -1,6 +1,6 @@
 package org.spacehq.mc.protocol.packet.ingame.server.world;
 
-import org.spacehq.mc.protocol.data.game.Chunk;
+import org.spacehq.mc.protocol.data.game.NetChunk;
 import org.spacehq.mc.protocol.util.NetUtil;
 import org.spacehq.mc.protocol.util.NetworkChunkData;
 import org.spacehq.mc.protocol.util.ParsedChunkData;
@@ -14,28 +14,28 @@ public class ServerMultiChunkDataPacket implements Packet {
 
     private int x[];
     private int z[];
-    private Chunk chunks[][];
+    private NetChunk netChunks[][];
     private byte biomeData[][];
 
     @SuppressWarnings("unused")
     private ServerMultiChunkDataPacket() {
     }
 
-    public ServerMultiChunkDataPacket(int x[], int z[], Chunk chunks[][], byte biomeData[][]) {
+    public ServerMultiChunkDataPacket(int x[], int z[], NetChunk chunks[][], byte biomeData[][]) {
         if(biomeData == null) {
             throw new IllegalArgumentException("BiomeData cannot be null.");
         }
 
         if(x.length != chunks.length || z.length != chunks.length) {
-            throw new IllegalArgumentException("X, Z, and Chunk arrays must be equal in length.");
+            throw new IllegalArgumentException("X, Z, and NetChunk arrays must be equal in length.");
         }
 
         boolean noSkylight = false;
         boolean skylight = false;
         for(int index = 0; index < chunks.length; index++) {
-            Chunk column[] = chunks[index];
+            NetChunk column[] = chunks[index];
             if(column.length != 16) {
-                throw new IllegalArgumentException("Chunk columns must contain 16 chunks each.");
+                throw new IllegalArgumentException("NetChunk columns must contain 16 netChunks each.");
             }
 
             for(int y = 0; y < column.length; y++) {
@@ -50,17 +50,17 @@ public class ServerMultiChunkDataPacket implements Packet {
         }
 
         if(noSkylight && skylight) {
-            throw new IllegalArgumentException("Either all chunks must have skylight values or none must have them.");
+            throw new IllegalArgumentException("Either all netChunks must have skylight values or none must have them.");
         }
 
         this.x = x;
         this.z = z;
-        this.chunks = chunks;
+        this.netChunks = chunks;
         this.biomeData = biomeData;
     }
 
     public int getColumns() {
-        return this.chunks.length;
+        return this.netChunks.length;
     }
 
     public int getX(int column) {
@@ -71,8 +71,8 @@ public class ServerMultiChunkDataPacket implements Packet {
         return this.z[column];
     }
 
-    public Chunk[] getChunks(int column) {
-        return this.chunks[column];
+    public NetChunk[] getChunks(int column) {
+        return this.netChunks[column];
     }
 
     public byte[] getBiomeData(int column) {
@@ -85,7 +85,7 @@ public class ServerMultiChunkDataPacket implements Packet {
         int columns = in.readVarInt();
         this.x = new int[columns];
         this.z = new int[columns];
-        this.chunks = new Chunk[columns][];
+        this.netChunks = new NetChunk[columns][];
         this.biomeData = new byte[columns][];
         NetworkChunkData[] data = new NetworkChunkData[columns];
         for(int column = 0; column < columns; column++) {
@@ -101,7 +101,7 @@ public class ServerMultiChunkDataPacket implements Packet {
         for(int column = 0; column < columns; column++) {
             in.readBytes(data[column].getData());
             ParsedChunkData chunkData = NetUtil.dataToChunks(data[column], false);
-            this.chunks[column] = chunkData.getChunks();
+            this.netChunks[column] = chunkData.getChunks();
             this.biomeData[column] = chunkData.getBiomes();
         }
     }
@@ -109,16 +109,16 @@ public class ServerMultiChunkDataPacket implements Packet {
     @Override
     public void write(NetOutput out) throws IOException {
         boolean skylight = false;
-        NetworkChunkData data[] = new NetworkChunkData[this.chunks.length];
-        for(int column = 0; column < this.chunks.length; column++) {
-            data[column] = NetUtil.chunksToData(new ParsedChunkData(this.chunks[column], this.biomeData[column]));
+        NetworkChunkData data[] = new NetworkChunkData[this.netChunks.length];
+        for(int column = 0; column < this.netChunks.length; column++) {
+            data[column] = NetUtil.chunksToData(new ParsedChunkData(this.netChunks[column], this.biomeData[column]));
             if(data[column].hasSkyLight()) {
                 skylight = true;
             }
         }
 
         out.writeBoolean(skylight);
-        out.writeVarInt(this.chunks.length);
+        out.writeVarInt(this.netChunks.length);
         for(int column = 0; column < this.x.length; column++) {
             out.writeInt(this.x[column]);
             out.writeInt(this.z[column]);

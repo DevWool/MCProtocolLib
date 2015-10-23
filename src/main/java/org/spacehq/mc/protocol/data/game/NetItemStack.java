@@ -2,26 +2,26 @@ package org.spacehq.mc.protocol.data.game;
 
 import org.spacehq.opennbt.tag.builtin.CompoundTag;
 
-public class ItemStack {
+public class NetItemStack {
 
     private int id;
     private int amount;
     private int data;
     private CompoundTag nbt;
 
-    public ItemStack(int id) {
+    public NetItemStack(int id) {
         this(id, 1);
     }
 
-    public ItemStack(int id, int amount) {
+    public NetItemStack(int id, int amount) {
         this(id, amount, 0);
     }
 
-    public ItemStack(int id, int amount, int data) {
+    public NetItemStack(int id, int amount, int data) {
         this(id, amount, data, null);
     }
 
-    public ItemStack(int id, int amount, int data, CompoundTag nbt) {
+    public NetItemStack(int id, int amount, int data, CompoundTag nbt) {
         this.id = id;
         this.amount = amount;
         this.data = data;
@@ -49,12 +49,12 @@ public class ItemStack {
         if(this == o) return true;
         if(o == null || getClass() != o.getClass()) return false;
 
-        ItemStack itemStack = (ItemStack) o;
+        NetItemStack netItemStack = (NetItemStack) o;
 
-        if(amount != itemStack.amount) return false;
-        if(data != itemStack.data) return false;
-        if(id != itemStack.id) return false;
-        if(nbt != null ? !nbt.equals(itemStack.nbt) : itemStack.nbt != null) return false;
+        if(amount != netItemStack.amount) return false;
+        if(data != netItemStack.data) return false;
+        if(id != netItemStack.id) return false;
+        if(nbt != null ? !nbt.equals(netItemStack.nbt) : netItemStack.nbt != null) return false;
 
         return true;
     }

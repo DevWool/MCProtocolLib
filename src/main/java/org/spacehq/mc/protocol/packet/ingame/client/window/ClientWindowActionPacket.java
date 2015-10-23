@@ -1,6 +1,6 @@
 package org.spacehq.mc.protocol.packet.ingame.client.window;
 
-import org.spacehq.mc.protocol.data.game.ItemStack;
+import org.spacehq.mc.protocol.data.game.NetItemStack;
 import org.spacehq.mc.protocol.data.game.values.MagicValues;
 import org.spacehq.mc.protocol.data.game.values.window.ClickItemParam;
 import org.spacehq.mc.protocol.data.game.values.window.CreativeGrabParam;
@@ -25,13 +25,13 @@ public class ClientWindowActionPacket implements Packet {
     private WindowActionParam param;
     private int actionId;
     private WindowAction action;
-    private ItemStack clicked;
+    private NetItemStack clicked;
 
     @SuppressWarnings("unused")
     private ClientWindowActionPacket() {
     }
 
-    public ClientWindowActionPacket(int windowId, int actionId, int slot, ItemStack clicked, WindowAction action, WindowActionParam param) {
+    public ClientWindowActionPacket(int windowId, int actionId, int slot, NetItemStack clicked, WindowAction action, WindowActionParam param) {
         this.windowId = windowId;
         this.actionId = actionId;
         this.slot = slot;
@@ -52,7 +52,7 @@ public class ClientWindowActionPacket implements Packet {
         return this.slot;
     }
 
-    public ItemStack getClickedItem() {
+    public NetItemStack getClickedItem() {
         return this.clicked;
     }
 

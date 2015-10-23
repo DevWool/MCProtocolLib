@@ -1,21 +1,21 @@
 package org.spacehq.mc.protocol.util;
 
-import org.spacehq.mc.protocol.data.game.Chunk;
+import org.spacehq.mc.protocol.data.game.NetChunk;
 
 import java.util.Arrays;
 
 public class ParsedChunkData {
 
-    private Chunk chunks[];
+    private NetChunk netChunks[];
     private byte biomes[];
 
-    public ParsedChunkData(Chunk chunks[], byte biomes[]) {
-        this.chunks = chunks;
+    public ParsedChunkData(NetChunk chunks[], byte biomes[]) {
+        this.netChunks = chunks;
         this.biomes = biomes;
     }
 
-    public Chunk[] getChunks() {
-        return this.chunks;
+    public NetChunk[] getChunks() {
+        return this.netChunks;
     }
 
     public byte[] getBiomes() {
@@ -30,14 +30,14 @@ public class ParsedChunkData {
         ParsedChunkData that = (ParsedChunkData) o;
 
         if(!Arrays.equals(biomes, that.biomes)) return false;
-        if(!Arrays.equals(chunks, that.chunks)) return false;
+        if(!Arrays.equals(netChunks, that.netChunks)) return false;
 
         return true;
     }
 
     @Override
     public int hashCode() {
-        int result = Arrays.hashCode(chunks);
+        int result = Arrays.hashCode(netChunks);
         result = 31 * result + (biomes != null ? Arrays.hashCode(biomes) : 0);
         return result;
     }

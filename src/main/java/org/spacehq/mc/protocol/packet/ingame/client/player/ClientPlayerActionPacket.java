@@ -1,6 +1,6 @@
 package org.spacehq.mc.protocol.packet.ingame.client.player;
 
-import org.spacehq.mc.protocol.data.game.Position;
+import org.spacehq.mc.protocol.data.game.NetPosition;
 import org.spacehq.mc.protocol.data.game.values.Face;
 import org.spacehq.mc.protocol.data.game.values.MagicValues;
 import org.spacehq.mc.protocol.data.game.values.entity.player.PlayerAction;
@@ -14,16 +14,16 @@ import java.io.IOException;
 public class ClientPlayerActionPacket implements Packet {
 
     private PlayerAction action;
-    private Position position;
+    private NetPosition netPosition;
     private Face face;
 
     @SuppressWarnings("unused")
     private ClientPlayerActionPacket() {
     }
 
-    public ClientPlayerActionPacket(PlayerAction action, Position position, Face face) {
+    public ClientPlayerActionPacket(PlayerAction action, NetPosition netPosition, Face face) {
         this.action = action;
-        this.position = position;
+        this.netPosition = netPosition;
         this.face = face;
     }
 
@@ -31,8 +31,8 @@ public class ClientPlayerActionPacket implements Packet {
         return this.action;
     }
 
-    public Position getPosition() {
-        return this.position;
+    public NetPosition getPosition() {
+        return this.netPosition;
     }
 
     public Face getFace() {
@@ -42,14 +42,14 @@ public class ClientPlayerActionPacket implements Packet {
     @Override
     public void read(NetInput in) throws IOException {
         this.action = MagicValues.key(PlayerAction.class, in.readUnsignedByte());
-        this.position = NetUtil.readPosition(in);
+        this.netPosition = NetUtil.readPosition(in);
         this.face = MagicValues.key(Face.class, in.readUnsignedByte());
     }
 
     @Override
     public void write(NetOutput out) throws IOException {
         out.writeByte(MagicValues.value(Integer.class, this.action));
-        NetUtil.writePosition(out, this.position);
+        NetUtil.writePosition(out, this.netPosition);
         out.writeByte(MagicValues.value(Integer.class, this.face));
     }
 

@@ -1,6 +1,6 @@
 package org.spacehq.mc.protocol.packet.ingame.client;
 
-import org.spacehq.mc.protocol.data.game.Position;
+import org.spacehq.mc.protocol.data.game.NetPosition;
 import org.spacehq.mc.protocol.util.NetUtil;
 import org.spacehq.packetlib.io.NetInput;
 import org.spacehq.packetlib.io.NetOutput;
@@ -11,7 +11,7 @@ import java.io.IOException;
 public class ClientTabCompletePacket implements Packet {
 
     private String text;
-    private Position position;
+    private NetPosition netPosition;
 
     @SuppressWarnings("unused")
     private ClientTabCompletePacket() {
@@ -21,9 +21,9 @@ public class ClientTabCompletePacket implements Packet {
         this(text, null);
     }
 
-    public ClientTabCompletePacket(String text, Position position) {
+    public ClientTabCompletePacket(String text, NetPosition netPosition) {
         this.text = text;
-        this.position = position;
+        this.netPosition = netPosition;
     }
 
     public String getText() {
@@ -33,15 +33,15 @@ public class ClientTabCompletePacket implements Packet {
     @Override
     public void read(NetInput in) throws IOException {
         this.text = in.readString();
-        this.position = in.readBoolean() ? NetUtil.readPosition(in) : null;
+        this.netPosition = in.readBoolean() ? NetUtil.readPosition(in) : null;
     }
 
     @Override
     public void write(NetOutput out) throws IOException {
         out.writeString(this.text);
-        out.writeBoolean(this.position != null);
-        if(this.position != null) {
-            NetUtil.writePosition(out, this.position);
+        out.writeBoolean(this.netPosition != null);
+        if(this.netPosition != null) {
+            NetUtil.writePosition(out, this.netPosition);
         }
     }
 
