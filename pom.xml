@@ -52,6 +52,10 @@
 
 	<repositories>
 		<repository>
+			<id>methuselah</id>
+			<url>https://maven.methuselah.ru/</url>
+		</repository>
+		<repository>
 			<id>spacehq-releases</id>
 			<url>https://repo.spacehq.org/content/repositories/releases/</url>
 		</repository>
@@ -86,8 +90,8 @@
 			<scope>test</scope>
 		</dependency>
 		<dependency>
-			<groupId>net.cyanwool</groupId>
-			<artifactId>CyanWoolAPI</artifactId>
+			<groupId>net.hexogendev</groupId>
+			<artifactId>hexogen-api</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
 		</dependency>
 	</dependencies>
